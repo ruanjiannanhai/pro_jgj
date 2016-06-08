@@ -30,7 +30,7 @@ var Friends = React.createClass({
                     </Tabs>
 
                 </div>
-
+ 
             </div>
         );
     }
