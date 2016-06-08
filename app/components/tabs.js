@@ -47,7 +47,7 @@ var Tabs = React.createClass({
 
         return (
             this.renderWrapper(
-                this.renderNavWrapper( this.renderNav() )
+                [this.renderNavWrapper( this.renderNav() )]
             )
         )
     }
@@ -64,7 +64,7 @@ var Tabs = React.createClass({
     ,renderNavWrapper: function (children) {
         var TabNavWrapper = this.props.tabNavWrapper;
         return (
-            <TabNavWrapper className={this.props.tabNavWrapperClass}>
+            <TabNavWrapper key="tabNavs" className={this.props.tabNavWrapperClass}>
                 {children}
             </TabNavWrapper>
         )
@@ -78,6 +78,16 @@ var Tabs = React.createClass({
                     className={this.getClassName(child)}
                     >{child.props.title}</a>
         }.bind(this))
+    }
+
+    ,renderBodyWrapper: function (children) {
+        var TabBodyWrapper = this.props.tabBodyWrapper;
+
+        return (
+            <TabBodyWrapper key="tabBody" className={}>
+                {children}
+            </TabBodyWrapper>
+        )
     }
     
     , getClassName: function (child) {
