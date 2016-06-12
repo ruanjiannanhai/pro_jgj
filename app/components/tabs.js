@@ -2,7 +2,8 @@
  * Created by lilei on 16-6-1.
  */
 
-var React = require('react');
+// var React = require('react');
+var classNames = require('classnames');
 
 var Tabs = React.createClass({
 
@@ -16,10 +17,11 @@ var Tabs = React.createClass({
     , getDefaultProps: function () {
         return {
             wrapper: 'div'
-            ,tabNavWrapper:'div'
-            ,tabBodyWrapper:'div'
-            ,tabNavWrapperClass:'buttons-tab'
-            ,tabNavClass:'tab-link button'
+            , tabNavWrapper: 'div'
+            , tabBodyWrapper: 'div'
+            , tabNavWrapperClass: 'buttons-tab'
+            , tabNavClass: 'tab-link button'
+            , tabBodyWrapperClass: 'tabs'
         }
     }
 
@@ -27,15 +29,15 @@ var Tabs = React.createClass({
         var defaultActiveKey = this.props.defaultActiveKey != null
             ? this.props.defaultActiveKey
             : this.getDefaultActiveKey(this.props.children);
-        return{
-            activeKey:defaultActiveKey
+        return {
+            activeKey: defaultActiveKey
         }
     }
 
     , getDefaultActiveKey: function (children) {
         var defaultActiveKey = null;
         React.Children.forEach(children, function (child) {
-            if(defaultActiveKey == null){
+            if (defaultActiveKey == null) {
                 defaultActiveKey = child.props.eventKey;
                 return null;
             }
@@ -47,12 +49,13 @@ var Tabs = React.createClass({
 
         return (
             this.renderWrapper(
-                [this.renderNavWrapper( this.renderNav() )]
+                [this.renderNavWrapper(this.renderNav()),
+                    this.renderBodyWrapper(this.renderTabPanels())]
             )
         )
     }
 
-    ,renderWrapper: function (children) {
+    , renderWrapper: function (children) {
         var Wrapper = this.props.wrapper;
         return (
             <Wrapper {...this.props}>
@@ -61,7 +64,7 @@ var Tabs = React.createClass({
         )
     }
 
-    ,renderNavWrapper: function (children) {
+    , renderNavWrapper: function (children) {
         var TabNavWrapper = this.props.tabNavWrapper;
         return (
             <TabNavWrapper key="tabNavs" className={this.props.tabNavWrapperClass}>
@@ -69,33 +72,54 @@ var Tabs = React.createClass({
             </TabNavWrapper>
         )
     }
-    
-    ,renderNav: function () {
-        return React.Children.map(this.props.children, function (child, index) {
+
+    , renderNav: function () {
+        return React.Children.map(this.props.children, function (child) {
             var key = child.props.eventKey;
 
+            var navClass = classNames(this.props.tabNavClass,
+                { 'active': (child.props.eventKey == this.state.activeKey) });
+
             return <a href="#"
-                    className={this.getClassName(child)}
-                    >{child.props.title}</a>
+                      key={key}
+                      onClick={this.handleClick.bind(this,key)}
+                      className={navClass}
+            >{child.props.title}</a>
         }.bind(this))
     }
 
-    ,renderBodyWrapper: function (children) {
+    , renderBodyWrapper: function (children) {
         var TabBodyWrapper = this.props.tabBodyWrapper;
 
         return (
-            <TabBodyWrapper key="tabBody" className={}>
+            <TabBodyWrapper key="tabBody" className={this.props.tabBodyWrapperClass}>
                 {children}
             </TabBodyWrapper>
         )
     }
-    
-    , getClassName: function (child) {
-        var className = this.props.tabNavClass;
-        if (child.props.eventKey == this.state.activeKey){
-            className = className + ' active';
+
+    , renderTabPanels: function () {
+        var activeKey = this.state.activeKey
+        return React.Children.map(this.props.children, function (child, index) {
+            return (
+                <Tabs.Item
+                    active={child.props.eventKey === activeKey}
+                    key={index}>
+                    {child.props.children}
+                </Tabs.Item>
+            )
+        })
+    }
+
+
+    ,handleClick: function (key,e) {
+        e.preventDefault();
+        var activeKey = this.state.activeKey;
+        if(key != activeKey){
+            this.setState({
+                activeKey: key
+            })
         }
-        return className;
     }
 
 
@@ -104,14 +128,15 @@ var Tabs = React.createClass({
 Tabs.Item = React.createClass({
 
     propTypes: {
-        title: React.PropTypes.string.isRequired
+        title: React.PropTypes.string
         , eventKey: React.PropTypes.any
         , active: React.PropTypes.bool
     }
 
     , render: function () {
+        var itemClass = classNames('tab', {'active':this.props.active});
         return (
-            <div>{this.props.children}</div>
+            <div className={itemClass}>{this.props.children}</div>
         )
     }
 });
