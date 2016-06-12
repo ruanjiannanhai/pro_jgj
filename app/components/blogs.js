@@ -19,3 +19,5 @@ var Blogs = React.createClass({
         })
     }
 })
+
+module.exports = Blogs;
