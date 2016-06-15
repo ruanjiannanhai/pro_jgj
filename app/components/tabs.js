@@ -2,7 +2,7 @@
  * Created by lilei on 16-6-1.
  */
 
-// var React = require('react');
+var React = require('react');
 var classNames = require('classnames');
 
 var Tabs = React.createClass({
@@ -99,7 +99,7 @@ var Tabs = React.createClass({
     }
 
     , renderTabPanels: function () {
-        var activeKey = this.state.activeKey
+        var activeKey = this.state.activeKey;
         return React.Children.map(this.props.children, function (child, index) {
             return (
                 <Tabs.Item

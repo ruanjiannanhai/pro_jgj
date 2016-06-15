@@ -5,7 +5,8 @@ var React = require('react');
 var ReactDom = require('react-dom');
 var Returner = require('../components/returner');
 var Tabs = require('../components/tabs');
-var TabContent = require('../components/tabContent');
+var Blogs = require('../components/blogs');
+var Link = require('react-router').Link;
 
 var Friends = React.createClass({
     render: function () {
@@ -19,10 +20,10 @@ var Friends = React.createClass({
 
                     <Tabs>
                         <Tabs.Item eventKey="1" title="全部">
-                            1111111111
+                            <Blogs url="/api/getmsgs"/>
                         </Tabs.Item>
                         <Tabs.Item eventKey="2" title="老乡">
-                            2222222222
+                            <Link to="/inbox">Inbox</Link>
                         </Tabs.Item>
                         <Tabs.Item eventKey="3" title="同行" disabled>
                             3333333333
@@ -37,7 +38,4 @@ var Friends = React.createClass({
 
 });
 
-ReactDom.render(
-    <Friends />,
-    document.getElementById('root')
-);
+module.exports = Friends;
